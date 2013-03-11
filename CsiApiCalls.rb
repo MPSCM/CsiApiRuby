@@ -28,7 +28,6 @@ module CsiApiCalls
   
     def getEmployeeInfo(emp_username, emp_password)
       employee = @soap_client.call(:authenticate_employee, message: { user_name: emp_username, password: emp_password })
-                              call(:authenticate_employee, message: {user_name: username, password: password} )
       return false if employee.body[:authenticate_employee_response][:authenticate_employee_result][:is_exception]
       emp_ticket = employee.body[:authenticate_employee_response][:authenticate_employee_result][:value][:employee_info]
     end
