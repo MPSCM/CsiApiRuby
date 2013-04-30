@@ -13,3 +13,4 @@ The goal is to implement all (most (some?)) of the methods in CSI's API as metho
 ## Next Steps
 + write live tests for current setup: actually interfacing with CSI
 + stub the expected CSI response and use Savon testing fixtures to test current code
+
