@@ -13,6 +13,7 @@ Gem::Specification.new do |s|
   s.description = %q{CsiApi provides a wrapper for CSI's SOAP Api using Savon}
 
   s.add_runtime_dependency "savon"
+  s.add_development_dependency "savon"
   s.add_development_dependency "rspec", "~>2.5.0"
 
   s.files         = `git ls-files`.split("\n")

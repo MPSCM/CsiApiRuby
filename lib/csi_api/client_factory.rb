@@ -13,7 +13,7 @@ module CsiApi
     end
 
     def self.generate_soap_client
-      client = Savon.client(wsdl: self.wsdl_url)
+      client = Savon.client(wsdl: self.wsdl)
       resp = client.call(:authenticate_consumer, message: { consumer_name: self.consumer_username, consumer_password: self.consumer_password })
       auth_ticket = resp.body[:authenticate_consumer_response][:authenticate_consumer_result][:value][:auth_ticket]
       client.globals[:soap_header] = { "tns:ConsumerAuthTicket" => { "tns:Value" => auth_ticket[:value] } }

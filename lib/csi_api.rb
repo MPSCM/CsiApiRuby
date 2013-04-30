@@ -1,0 +1,5 @@
+require 'savon'
+require 'csi_api/client_factory'
+require 'csi_api/csi_client'
+require 'csi_api/employee'
+require 'csi_api/member'
