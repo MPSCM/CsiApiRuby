@@ -11,21 +11,21 @@ module CsiApi
     attr_accessor :employee_ticket, :employee_csi_client, :ols_settings
     
     
-    def initialize(employee_info, csi_client)
-      create_employee_csi_client(employee_info, csi_client)
+    def initialize(employee_info)
+      create_employee_csi_client(employee_info)
       extract_attr(employee_info)
       create_ols_settings(employee_info)
     end
     
     private
     
-    def create_employee_csi_client(employee_info, csi_client)
-      @employee_csi_client = csi_client.dup
-      auth_ticket = employee_info.body[:authenticate_employee_response][:authenticate_employee_result][:value][:employee_ticket]
+    def create_employee_csi_client(employee_info)
+      self.employee_ticket = employee_info.body[:authenticate_employee_response][:authenticate_employee_result][:value][:employee_ticket]
+      self.employee_csi_client = ClientFactory.generate_employee_client(self.employee_ticket)
     end
     
     def create_ols_settings(employee_info)
-      @ols_settings = employee_info.body[:authenticate_employee_response][:authenticate_employee_result][:value][:ols_settings]
+      self.ols_settings = employee_info.body[:authenticate_employee_response][:authenticate_employee_result][:value][:ols_settings]
     end
     
     def extract_attr(employee_info)

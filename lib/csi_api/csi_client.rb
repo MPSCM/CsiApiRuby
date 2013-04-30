@@ -6,20 +6,18 @@ module CsiApi
   
     attr_accessor :soap_client
 
-    def initialize(wsdl_url, consumer_username, consumer_password)
-      client = Savon.client(wsdl: wsdl_url)
-      resp = client.call(:authenticate_consumer, message: { consumer_name: consumer_username, consumer_password: consumer_password })
-      auth_ticket = resp.body[:authenticate_consumer_response][:authenticate_consumer_result][:value][:auth_ticket]
-      client.globals[:soap_header] = { "tns:ConsumerAuthTicket" => { "tns:Value" => auth_ticket[:value] } }
-      @soap_client = client
+    def initialize(options = {})
+      # options: :wsdl, :consumer_username, :consumer_password
+      ClientFactory.configure_factory(options)
+      self.soap_client = ClientFactory.generate_soap_client
     end
   
-    def create_member
-      Member.new get_member_info
+    def create_member(username, password)
+      Member.new get_member_info(username, password)
     end
     
-    def create_employee
-      Employee.new get_employee_info
+    def create_employee(username, password)
+      Employee.new get_employee_info(username, password)
     end
     
     private
@@ -30,7 +28,7 @@ module CsiApi
       member
     end
     
-    def getEmployeeInfo(username, password)
+    def get_employee_info(username, password)
       employee = @soap_client.call(:authenticate_employee, message: { user_name: username, password: password })
       return false if employee.body[:authenticate_employee_response][:authenticate_employee_result][:is_exception]
       employee
@@ -40,30 +38,7 @@ module CsiApi
 
 end
 
-# def getMemberInfo(member_username, member_password)
-#   member = @soap_client.call(:authenticate_member, message: { username: member_username, password: member_password })
-#   return false if member.body[:authenticate_member_response][:authenticate_member_result][:is_exception]
-#   member_info = member.body[:authenticate_member_response][:authenticate_member_result][:value][:membership_info]
-# end
-# 
-# def getMemberAuthToken(member_username, member_password)
-#   member = @soap_client.call(:authenticate_member, message: { username: member_username, password: member_password })
-#   return false if member.body[:authenticate_member_response][:authenticate_member_result][:is_exception]
-#   member_info = member.body[:authenticate_member_response][:authenticate_member_result][:value][:membership_ticket]
-# end
-# 
-# def getEmployeeInfo(emp_username, emp_password)
-#   employee = @soap_client.call(:authenticate_employee, message: { user_name: emp_username, password: emp_password })
-#   return false if employee.body[:authenticate_employee_response][:authenticate_employee_result][:is_exception]
-#   emp_ticket = employee.body[:authenticate_employee_response][:authenticate_employee_result][:value][:employee_info]
-# end
-# 
-# def getEmployeeAuthTicket(emp_username, emp_password)
-#   employee = @soap_client.call(:authentiate_employee, message: { user_name: emp_username, password: emp_password })
-#   return false if employee.body[:authenticate_employee_response][:authenticate_employee_result][:is_exception]
-#   emp_ticket = employee.body[:authenticate_employee_response][:authenticate_employee_result][:value][:employee_ticket]
-# end
-# 
+
 # def getGroupExCategoriesList(site_id)
 #   categories = @soap_client.call(:get_categories, message: { module_for: "GRX", site_id: site_id, include_all_option: true, check_s_s_count: true })
 #   return false if categories.body[:get_categories_response][:get_categories_result][:is_exception]
