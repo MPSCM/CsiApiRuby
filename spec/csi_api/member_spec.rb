@@ -1,22 +1,11 @@
 require 'spec_helper'
-require 'savon/mock/spec_helper'
 
 describe CsiApi::Member do
-  include Savon::SpecHelper
-  before(:all) { savon.mock! }
-  after(:all) { savon.unmock! }
-
+  include CsiApiMocks
+  
   let(:member_info) do
-    xml_info = File.read("spec/fixtures/authenticate_member_response.xml")
-    Http = Struct.new(:code, :headers, :body) do
-      def error?
-        false
-      end
-    end
-    http = Http.new(200, {}, xml_info)
-    savon_local_options = Savon::LocalOptions.new
-    savon_global_options = Savon::GlobalOptions.new
-    savon_response = Savon::Response.new(http, savon_global_options, savon_local_options)
+    xml_response = File.read("spec/fixtures/authenticate_member_response.xml")
+    mock_savon_response xml_response
   end  
   
   let(:member_auth_token) do
