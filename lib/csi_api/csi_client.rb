@@ -11,19 +11,9 @@ module CsiApi
       ClientFactory.configure_factory(options)
       self.soap_client = ClientFactory.generate_soap_client
     end
-  
-    def create_member(username, password)
-      Member.new get_member_info(username, password)
-    end
-    
-    def create_employee(username, password)
-      Employee.new get_employee_info(username, password)
-    end
-    
-    private
     
     def get_member_info(username, password)
-      member = @soap_client.call(:authenticate_member, message: { username: member_username, password: member_password })
+      member = @soap_client.call(:authenticate_member, message: { username: username, password: password })
       return false if member.body[:authenticate_member_response][:authenticate_member_result][:is_exception]
       member
     end

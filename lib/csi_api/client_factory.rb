@@ -10,6 +10,7 @@ module CsiApi
       self.wsdl = options[:wsdl] || nil
       self.consumer_username = options[:consumer_username] || nil
       self.consumer_password = options[:consumer_password] || nil
+      true
     end
 
     def self.generate_soap_client
