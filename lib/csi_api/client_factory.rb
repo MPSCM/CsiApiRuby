@@ -29,8 +29,9 @@ module CsiApi
     def self.generate_employee_client(employee_auth_ticket)
       client = self.generate_soap_client
       client.globals[:soap_header]["tns:EmployeeAuthTicket"] = { "tns:Value" => employee_auth_ticket[:value] }
+      client
     end
     
   end
   
-end
+end 
