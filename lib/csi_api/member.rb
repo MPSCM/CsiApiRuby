@@ -11,21 +11,21 @@ module CsiApi
     ATTRS.each do |attr|
       attr_accessor attr
     end
-    attr_accessor :member_ticket, :member_csi_client
+    attr_accessor :member_ticket, :csi_client
     
     def initialize(member_info)
-      create_member_csi_client(member_info)
+      create_csi_client(member_info)
       extract_attr(member_info)
     end
     
-    def create_member_csi_client(member_info)
+    def create_csi_client(member_info)
       self.member_ticket = member_info.body[:authenticate_member_response][:authenticate_member_result][:value][:member_ticket]
-      self.member_csi_client = ClientFactory.generate_member_client(self.member_ticket)
+      self.csi_client = ClientFactory.generate_member_client(self.member_ticket)
     end
     
     def extract_attr(member_info)
-      mbr_info = member_info.body[:authenticate_member_response][:authenticate_member_result][:value][:member_info]
-      ATTR.each do |attr|
+      mbr_info = member_info.body[:authenticate_member_response][:authenticate_member_result][:value][:membership_info]
+      ATTRS.each do |attr|
         fn = "#{attr}="
         send(fn, mbr_info[attr])
       end

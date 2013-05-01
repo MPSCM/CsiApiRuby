@@ -30,7 +30,7 @@ module CsiApi
     
     def extract_attr(employee_info)
       emp_info = employee_info.body[:authenticate_employee_response][:authenticate_employee_result][:value][:employee_info]
-      ATTR.each do |attr|
+      ATTRS.each do |attr|
         fn = "#{attr}="
         send(fn, emp_info[attr])      
       end
