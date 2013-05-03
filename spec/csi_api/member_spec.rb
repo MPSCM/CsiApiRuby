@@ -12,10 +12,27 @@ describe CsiApi::Member do
     member_info.body[:authenticate_member_response][:authenticate_member_result][:value][:member_ticket]
   end
   
+  let(:member) do
+    CsiApi::ClientFactory.should_receive(:generate_member_client).with(member_auth_token)  
+    CsiApi::Member.new member_info
+  end
+  
   it "should initialize" do
-    CsiApi::ClientFactory.should_receive(:generate_member_client).with(member_auth_token)
-    member = CsiApi::Member.new member_info
     member.should be_an_instance_of CsiApi::Member    
   end
   
+  it "should create attribute accessors from keys" do
+    member.should respond_to :first_name
+    member.should respond_to :last_name
+  end
+  
+  it "should have array of attributes" do
+    member.class.attr_list.should be_an_instance_of Array
+    member.class.attr_list.should include(:first_name)
+  end
+  
+  it "should properly populate attributes" do
+    member.first_name.should == "KIM"
+    member.last_name.should == "WOOD"
+  end
 end
