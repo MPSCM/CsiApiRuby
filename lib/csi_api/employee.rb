@@ -33,7 +33,7 @@ module CsiApi
     
     def populate_attributes(employee_info)
       attributes = get_attribute_names(employee_info)
-      Employee.create_attr_accessors attributes # if not already done
+      Employee.create_attr_accessors attributes if Employee.attr_list == []
       extract_attr employee_info
     end
     

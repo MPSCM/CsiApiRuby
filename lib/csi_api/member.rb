@@ -27,7 +27,7 @@ module CsiApi
     
     def populate_attributes(member_info)
       attributes = get_attribute_names(member_info)
-      Member.create_attr_accessors attributes # if not already done
+      Member.create_attr_accessors attributes if Member.attr_list == []
       extract_attr member_info
     end
     

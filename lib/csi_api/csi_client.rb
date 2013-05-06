@@ -23,6 +23,13 @@ module CsiApi
       return false if employee.body[:authenticate_employee_response][:authenticate_employee_result][:is_exception]
       employee
     end
+    
+    def get_class_list(site_id)
+      message = { mod_for: "GRX_Group_Exercise", site_id: site_id }
+      class_list = @soap_client.call(:get_class_schedules, message: message)
+      return false if class_list.body[:get_class_schedules_response][:get_class_schedules_result][:is_exception]
+      class_list
+    end
   
   end
 

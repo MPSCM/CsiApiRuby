@@ -13,7 +13,7 @@ describe CsiApi::Employee do
   end
   
   let(:employee) do
-    CsiApi::ClientFactory.should_receive(:generate_employee_client).with(employee_auth_token)
+    CsiApi::ClientFactory.should_receive(:generate_employee_client).with(employee_auth_token).at_least(:once)
     CsiApi::Employee.new employee_info
   end
   
@@ -35,5 +35,19 @@ describe CsiApi::Employee do
     employee.first_name.should == "Buffy"
     employee.last_name.should == "Wood"
   end
+  
+  it "should not reset attributes when another instance is initialized" do
+    employee
+    new_employee = CsiApi::Employee.new employee_info
+    employee.first_name.should == "Buffy"
+    new_employee.first_name.should == "Buffy"
+  end
+  
+  it "should not have multiple copies of attributes in attribute array after multiple initializations" do
+    employee
+    new_employee = CsiApi::Employee.new employee_info
+    CsiApi::Employee.attr_list.count(:first_name).should == 1
+  end
+  
   
 end

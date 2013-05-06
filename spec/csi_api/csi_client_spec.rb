@@ -3,11 +3,12 @@ require 'savon/mock/spec_helper'
 
 describe CsiApi::CsiClient do
   include Savon::SpecHelper
+  include CsiApiMocks
   
   before(:all) { savon.mock! }
   after(:all) { savon.unmock! }
-  let(:base_client) { Savon.client(wsdl: "spec/fixtures/ApiService.wsdl") } 
-  let(:options) { { wsdl: "spec/fixtures/ApiService.wsdl", consumer_username: "test_user",
+  let(:base_client) { Savon.client(wsdl: "spec/fixtures/ApiService45.wsdl") } 
+  let(:options) { { wsdl: "spec/fixtures/ApiService45.wsdl", consumer_username: "test_user",
                                      consumer_password: "test_password" } }
                                      
   before(:each) do
@@ -44,6 +45,17 @@ describe CsiApi::CsiClient do
        employee_info.body.should have_key :authenticate_employee_response
      end
      
+  end
+  
+  describe "retrieve list of classes" do
+    let(:csi_client) { CsiApi::CsiClient.new(options) }
+    
+    it "should query the CSI API for a list of classes" do
+      schedules_message = { mod_for: "GRX_Group_Exercise", site_id: 142 }
+      response = File.read("spec/fixtures/get_class_schedules_response.xml")
+      savon.expects(:get_class_schedules).with(message: schedules_message).returns(response)
+      csi_client.get_class_list(142)
+    end
   end
   
 end

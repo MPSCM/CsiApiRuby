@@ -13,7 +13,7 @@ describe CsiApi::Member do
   end
   
   let(:member) do
-    CsiApi::ClientFactory.should_receive(:generate_member_client).with(member_auth_token)  
+    CsiApi::ClientFactory.should_receive(:generate_member_client).with(member_auth_token).at_least(:once)  
     CsiApi::Member.new member_info
   end
   
@@ -35,4 +35,19 @@ describe CsiApi::Member do
     member.first_name.should == "KIM"
     member.last_name.should == "WOOD"
   end
+  
+  it "should not reset attributes when another instance is initialized" do
+    member
+    new_member = CsiApi::Member.new member_info
+    member.first_name.should == "KIM"
+    new_member.first_name.should == "KIM"
+  end
+  
+  it "should not have multiple copies of attributes in attribute array after multiple initializations" do
+    member
+    new_member = CsiApi::Member.new member_info
+    CsiApi::Member.attr_list.count(:first_name).should == 1
+  end
+    
+  
 end
