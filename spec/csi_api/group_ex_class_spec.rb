@@ -39,7 +39,9 @@ describe CsiApi::GroupExClass do
   
   it "should have a DateTime object for :schedule_date_from and :schedule_date_to" do
     group_ex_class.schedule_date_from.class.should == DateTime 
+    group_ex_class.schedule_date_from.should == DateTime.strptime("4/15/2013 6:00:00 AM", '%m/%d/%Y %H:%M:%S %p')
     group_ex_class.schedule_date_to.class.should == DateTime
+    group_ex_class.schedule_date_to.should == DateTime.strptime("4/15/2013 6:45:00 AM", '%m/%d/%Y %H:%M:%S %p')
   end
 
 end

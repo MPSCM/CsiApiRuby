@@ -9,7 +9,7 @@ module CsiApi
     end
     
     # attrs from GetScheduleByMemId
-    ATTRS_FROM_SINGLE= [:short_desc, :schedule_date_from, :schedule_date_to]
+    ATTRS_FROM_SINGLE = [:short_desc, :schedule_date_from, :schedule_date_to]
     ATTRS_FROM_SINGLE.each do |atrb|
       attr_accessor atrb
     end

@@ -4,9 +4,9 @@ module CsiApi
     
     attr_accessor :csi_client, :class_list
     
-    def initialize(client)
+    def initialize(client, site_id)
       self.csi_client = client
-      soap_response = self.csi_client.get_class_list(142)      
+      soap_response = self.csi_client.get_class_list(site_id)       
       extract_classes soap_response
     end
     
