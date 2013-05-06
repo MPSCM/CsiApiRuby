@@ -1,11 +1,7 @@
 module CsiApi
   
   class Member
-    
-    class << self
-      attr_accessor :attr_list
-    end
-    @attr_list = []
+    extend AddAttrAccessor
     
     attr_accessor :member_ticket, :csi_client
     
@@ -27,20 +23,12 @@ module CsiApi
     
     def populate_attributes(member_info)
       attributes = get_attribute_names(member_info)
-      Member.create_attr_accessors attributes if Member.attr_list == []
+      Member.create_attr_accessors attributes if Member.attr_list == nil
       extract_attr member_info
     end
     
     def get_attribute_names(member_info)
       member_info.body[:authenticate_member_response][:authenticate_member_result][:value][:membership_info].keys
-    end
-      
-    def self.create_attr_accessors(attributes)
-      attributes.each do |attr|
-        atrb = attr.to_s.gsub("@", "").gsub!(":", "_") || attr
-        attr_accessor atrb
-        self.attr_list << atrb
-      end
     end
     
     def extract_attr(member_info)
