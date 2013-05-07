@@ -51,10 +51,11 @@ describe CsiApi::CsiClient do
     let(:csi_client) { CsiApi::CsiClient.new(options) }
     
     it "should query the CSI API for a list of classes" do
-      schedules_message = { mod_for: "GRX_Group_Exercise", site_id: 142 }
+      tax_day = "2013-04-15"
+      schedules_message = { mod_for: "GRX_Group_Exercise", site_id: 142, from_date: "2013-04-15", to_date: "2013-04-15" }
       response = File.read("spec/fixtures/get_class_schedules_response.xml")
       savon.expects(:get_class_schedules).with(message: schedules_message).returns(response)
-      csi_client.get_class_list(142)
+      csi_client.get_class_list(142, tax_day, tax_day)
     end
   end
   
