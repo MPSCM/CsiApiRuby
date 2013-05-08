@@ -26,7 +26,7 @@ module CsiApi
     
     def get_class_list(site_id, start_date, end_date)
       message = { mod_for: "GRX_Group_Exercise", site_id: site_id, from_date: start_date, to_date: end_date }
-      class_list = @soap_client.call(:get_class_schedules, message: message)
+      class_list = self.soap_client.call(:get_class_schedules, message: message)
       return false if class_list.body[:get_class_schedules_response][:get_class_schedules_result][:is_exception]
       class_list
     end

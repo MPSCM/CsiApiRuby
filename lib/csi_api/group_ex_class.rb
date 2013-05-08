@@ -13,7 +13,7 @@ module CsiApi
     # group_ex_class_info is element from array of group ex classes returned
     # to the GroupExClassList object. It's just a hash
     def initialize(group_ex_class_info, date)
-      self.soap_client = ClientFactory.generate_soap_client
+      # self.soap_client = ClientFactory.generate_soap_client
       set_attributes(group_ex_class_info, ATTRS_FROM_LIST)
       set_date_time(group_ex_class_info, date)
     end

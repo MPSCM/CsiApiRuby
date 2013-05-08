@@ -15,18 +15,9 @@ describe CsiApi::GroupExClass do
   let(:test_date_time) { DateTime.new(2013, 04, 15, 9, 00) }
   let(:group_ex_class) { CsiApi::GroupExClass.new class_info, test_date_time }
   
-  before(:each) do
-    CsiApi::ClientFactory.should_receive(:generate_soap_client) { base_client }
-    group_ex_class 
-  end
-  
   it "should initialize" do
     group_ex_class.should be_an_instance_of CsiApi::GroupExClass
     group_ex_class.class_name.should == "REV"
-  end
-  
-  it "should have a soap client" do
-    group_ex_class.soap_client.should == base_client
   end
   
   it "should make soap call for class details on initialize" do
@@ -39,10 +30,13 @@ describe CsiApi::GroupExClass do
   end
   
   it "should set the DateTime object as a combination of start time for the class and the date passed to ::new" do
+    # The Date portion comes from test_date passed into the GroupExClass; 
+    # the time portion comes from the class_info[:start_time] and class_info[:end_time]
     group_ex_class.start_date_time.should == DateTime.new(2013, 04, 15, 6, 00)
     group_ex_class.end_date_time.should == DateTime.new(2013, 04, 15, 6, 45)
   end
   
+  # Dates and times below based on class_info and test_date: 2013-04-15T06:00:00 and 2013-04-15T06:45:00
   it "should return the class date as a string" do
     group_ex_class.long_date.should == "Monday, Apr 15, 2013"
     group_ex_class.short_date.should == "4/15/2013"

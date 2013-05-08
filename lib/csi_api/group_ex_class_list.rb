@@ -35,7 +35,8 @@ module CsiApi
     
     def extract_classes(soap_response, date)
       self.class_list ||= []
-      class_array = soap_response.body[:get_class_schedules_response][:get_class_schedules_result][:value][:class_schedules_info]
+      response_body = soap_response.body[:get_class_schedules_response][:get_class_schedules_result][:value][:class_schedules_info]
+      class_array = response_body.class == Array ? response_body : [response_body]
       class_array.each do |group_ex_class_data|
         create_class(group_ex_class_data, date)
       end
