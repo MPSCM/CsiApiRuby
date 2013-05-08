@@ -33,7 +33,6 @@ module CsiApi
     def end_time
       format_time(self.end_date_time)
     end
-      
     
     private
     

@@ -20,9 +20,14 @@ describe CsiApi::GroupExClassList do
   end
   
   let(:list) { CsiApi::GroupExClassList.new(csi_client, { site_id: 142 }) }
+  let(:small_list) do
+    csi_client.should_receive(:get_class_list).with(142, "2013-04-15", "2013-04-15") { mock_savon_response File.read("spec/fixtures/date_range/2013-04-15.xml") }
+    class_list = CsiApi::GroupExClassList.new(csi_client, { site_id: 142, start_date: "2013-04-15", end_date: "2013-04-15" })
+  end
+    
   
   before(:each) do
-    CsiApi::GroupExClass.should_receive(:new).with(anything(), a_kind_of(Date)).at_least(1).times
+    CsiApi::GroupExClass.should_receive(:new).with(anything(), a_kind_of(Date)).at_least(1).times.and_call_original 
     CsiApi::ClientFactory.should_receive(:generate_soap_client).exactly(0).times
   end    
   
@@ -68,7 +73,9 @@ describe CsiApi::GroupExClassList do
     zero_class_list.class_list.length.should == 0
     # This is just to satisfy the before(:each) requirement for GroupExClass.
     # Because there are no classes, GroupExClass is not called.
-    CsiApi::GroupExClass.new(142, DateTime.now)
+    response = mock_savon_response get_class_schedules_response
+    class_info = response.body[:get_class_schedules_response][:get_class_schedules_result][:value][:class_schedules_info][0]
+    CsiApi::GroupExClass.new(class_info, DateTime.now)
   end
 
   it "should handle a soap response that consists of only one class for a particular day" do
@@ -97,29 +104,47 @@ describe CsiApi::GroupExClassList do
     date_range_list.class_list.length.should == number_of_classes_expected
   end
   
+  it "should respond to #each" do
+    list.should respond_to(:each)
+    n = 0
+    list.each { |gx_class| n += 1 }
+    n.should == list.class_list.length
+  end
+  
   it "should sort the classes in the list by date/time" do
-    list
-    pending
+    list.should respond_to(:sort_by_start_date_time)
+    sorted_array = list.sort_by_start_date_time
+    sorted_array[0].start_date_time.should <= sorted_array[1].start_date_time
+  end
+  
+  it "should sort the classes in the list by the class title" do
+    list.should respond_to(:sort_by_class_name)
+    sorted_array = list.sort_by_class_name
+    sorted_array[0].class_name.should <= sorted_array[1].class_name
   end
   
   it "should return a subset of the list chosen by class name" do
-    list
-    pending
+    small_list.should respond_to(:choose_by_class_name)
+    subset = small_list.choose_by_class_name("REV")
+    subset.each do |gx_class|
+      gx_class.class_name.should == "REV"
+    end
   end
   
   it "should return a subset of the list chosen by instructor name" do 
-    list
-    pending
+    small_list.should respond_to(:choose_by_instructor)
+    subset = small_list.choose_by_instructor("Lisa F.")
+    subset.each do |gx_class|
+      gx_class.instructor.should == "Lisa F."
+    end
   end
   
   it "should return a subset of the list chosen by category" do
-    list
-    pending
-  end
-  
-  it "should response to #each" do
-    list
-    pending
+    small_list.should respond_to(:choose_by_category)
+    subset = small_list.choose_by_category_name("REV")
+    subset.each do |gx_class|
+      gx_class.category_name.should == "REV"
+    end
   end
   
 end

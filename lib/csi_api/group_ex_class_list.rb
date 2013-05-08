@@ -1,6 +1,7 @@
 module CsiApi
   
   class GroupExClassList
+    include Enumerable
     
     attr_accessor :csi_client, :class_list, :start_date, :end_date
     
@@ -13,7 +14,41 @@ module CsiApi
       soap_response = get_class_list(options[:site_id])
     end
     
+    def each &block  
+      @class_list.each do |gx_class|
+        yield gx_class
+      end  
+    end
+    
+    def method_missing(meth, *args, &block)
+      if meth.to_s =~ /^sort_by_(.+)$/
+        run_sort_by_method($1)
+      elsif meth.to_s =~ /^choose_by_(.+)$/
+        run_choose_by_method($1, args)
+      else
+        super
+      end
+    end
+    
+    def respond_to?(meth)
+      if meth.to_s =~ /^sort_by_(.+)$/
+        true
+      elsif meth.to_s =~ /^choose_by_(.+)$/
+        true
+      else
+        super
+      end
+    end
+    
     private
+    
+    def run_sort_by_method(atrb)
+      @class_list.sort_by { |gx_class| gx_class.send(atrb) }
+    end
+    
+    def run_choose_by_method(atrb, args)
+      @class_list.select { |gx_class| gx_class.send(atrb) == args[0] }
+    end
     
     def get_date_from_options(entered_date = nil)
       if entered_date.kind_of? Date
