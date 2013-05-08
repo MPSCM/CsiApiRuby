@@ -17,8 +17,7 @@ describe CsiApi::GroupExClassList do
     client = double()
     client.stub(:get_class_list).with(142, a_kind_of(String), a_kind_of(String)) { mock_savon_response get_class_schedules_response }
     client
-  end  
-
+  end
   
   let(:list) { CsiApi::GroupExClassList.new(csi_client, { site_id: 142 }) }
   
@@ -62,7 +61,16 @@ describe CsiApi::GroupExClassList do
     list.class_list.should be_an_instance_of Array
     list.class_list.should_not be_empty
   end
-  
+
+  it "should handle a soap response that consists of zero classes for a particular day" do
+    csi_client.should_receive(:get_class_list).with(142, "2013-04-20", "2013-04-20") { mock_savon_response File.read("spec/fixtures/get_class_schedules_response_zero.xml") }
+    zero_class_list = CsiApi::GroupExClassList.new(csi_client, { site_id: 142, start_date: "2013-04-20", end_date: "2013-04-20" })
+    zero_class_list.class_list.length.should == 0
+    # This is just to satisfy the before(:each) requirement for GroupExClass.
+    # Because there are no classes, GroupExClass is not called.
+    CsiApi::GroupExClass.new(142, DateTime.now)
+  end
+
   it "should handle a soap response that consists of only one class for a particular day" do
     csi_client.should_receive(:get_class_list).with(142, "2013-04-16", "2013-04-16") { mock_savon_response File.read("spec/fixtures/get_class_schedules_response_single.xml") }
     single_class_list = CsiApi::GroupExClassList.new(csi_client, { site_id: 142, start_date: "2013-04-16", end_date: "2013-04-16" })

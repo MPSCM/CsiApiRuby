@@ -6,6 +6,7 @@ module CsiApi
     
     # options: :site_id, :start_date, :end_date
     def initialize(client, options = {})
+      self.class_list ||= []
       self.csi_client = client
       self.start_date = get_date_from_options(options[:start_date])
       self.end_date = get_date_from_options(options[:end_date])
@@ -34,11 +35,12 @@ module CsiApi
     end
     
     def extract_classes(soap_response, date)
-      self.class_list ||= []
-      response_body = soap_response.body[:get_class_schedules_response][:get_class_schedules_result][:value][:class_schedules_info]
-      class_array = response_body.class == Array ? response_body : [response_body]
-      class_array.each do |group_ex_class_data|
-        create_class(group_ex_class_data, date)
+      if soap_response.body[:get_class_schedules_response][:get_class_schedules_result][:value]
+        response_body = soap_response.body[:get_class_schedules_response][:get_class_schedules_result][:value][:class_schedules_info]
+        class_array = response_body.class == Array ? response_body : [response_body]
+        class_array.each do |group_ex_class_data|
+          create_class(group_ex_class_data, date)
+        end
       end
     end
     
