@@ -3,7 +3,7 @@ $:.push File.expand_path("../lib", __FILE__)
 require "csi_api/version"
 
 Gem::Specification.new do |s|
-  s.name        = "CsiApi"
+  s.name        = "csi_api"
   s.version     = CsiApi::VERSION
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Stuart Terrett"]
