@@ -22,28 +22,9 @@ module CsiApi
       self.csi_client = ClientFactory.generate_member_client(self.member_ticket)
     end
     
-    # def populate_attributes(member_info)
-    #   attributes = get_attribute_names(member_info)
-    #   Member.create_attr_accessors attributes if Member.attr_list == nil
-    #   extract_attr member_info
-    # end
-    
-    # def get_attribute_names(info)
-    #   info_hash = get_hash_from_info(info)
-    #   info_hash.keys
-    # end
-    
     def get_hash_from_info(member_info)
       member_info.body[:authenticate_member_response][:authenticate_member_result][:value][:membership_info]
     end
-    
-    # def extract_attr(member_info)
-    #   mbr_info = member_info.body[:authenticate_member_response][:authenticate_member_result][:value][:membership_info]
-    #   Member.attr_list.each do |attr|
-    #     fn = "#{attr}="
-    #     send(fn, mbr_info[attr])
-    #   end
-    # end
     
   end
   

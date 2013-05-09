@@ -49,5 +49,9 @@ describe CsiApi::GroupExClass do
   it "should return the class end time as a string" do 
     group_ex_class.end_time.should == "6:45 AM"
   end
+  
+  it "should return the date of the class as a date object for sorting" do
+    group_ex_class.date.should == Date.parse("2013-04-15")
+  end
 
 end

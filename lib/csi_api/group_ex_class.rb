@@ -26,6 +26,10 @@ module CsiApi
       self.start_date_time.strftime '%-m/%-d/%Y'
     end
     
+    def date
+      self.start_date_time.to_date
+    end
+    
     def start_time
       format_time(self.start_date_time)
     end

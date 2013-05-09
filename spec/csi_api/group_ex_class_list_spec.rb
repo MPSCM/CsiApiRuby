@@ -147,4 +147,13 @@ describe CsiApi::GroupExClassList do
     end
   end
   
+  it "should return a subset of the list chosen by date" do
+    small_list.should respond_to(:choose_by_date)
+    subset = small_list.choose_by_date(Date.parse("2013-04-15"))
+    subset.should_not be_empty
+    subset.each do |gx_class|
+      gx_class.date.should == Date.parse("2013-04-15")
+    end
+  end
+  
 end
