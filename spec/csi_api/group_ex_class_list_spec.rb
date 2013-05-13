@@ -31,6 +31,17 @@ describe CsiApi::GroupExClassList do
     CsiApi::ClientFactory.should_receive(:generate_soap_client).exactly(0).times
   end    
   
+  it "should be initialized without an API request and without data when no options are provided" do
+    client = CsiApi::GroupExClassList.new(csi_client)
+    client.should be_an_instance_of CsiApi::GroupExClassList
+    client.class_list.should == []
+    # to satisfy before(:each) expectations that cover the rest of the initialization
+    data = mock_savon_response get_class_schedules_response
+    class_data = data.body[:get_class_schedules_response][:get_class_schedules_result][:value][:class_schedules_info][0]
+    CsiApi::GroupExClass.new(class_data, DateTime.now)
+  end
+    
+  
   it "should get the list of classes from CSI's API" do
     csi_client.should_receive(:get_class_list).with(142, a_kind_of(String), a_kind_of(String))
     list

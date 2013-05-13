@@ -11,7 +11,7 @@ module CsiApi
       self.csi_client = client
       self.start_date = get_date_from_options(options[:start_date])
       self.end_date = get_date_from_options(options[:end_date])
-      soap_response = get_class_list(options[:site_id])
+      get_class_list(options[:site_id]) unless options.empty?
     end
     
     def each &block  
