@@ -38,6 +38,15 @@ module CsiApi
       format_time(self.end_date_time)
     end
     
+    def reserve_class(member)
+      response = member.csi_client.call(:add_ol_s_cart_entry_for_group_x, message: {schedule_id: self.schedule_id, mem_id: member.member_id })
+      if response.body[:add_ol_s_cart_entry_for_group_x_response][:add_ol_s_cart_entry_for_group_x_result][:value] == 0
+        true
+      else
+        response.body[:add_ol_s_cart_entry_for_group_x_response][:add_ol_s_cart_entry_for_group_x_result][:exception][:exception_string]
+      end
+    end
+    
     private
     
     def format_time(time)
