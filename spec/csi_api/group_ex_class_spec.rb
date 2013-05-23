@@ -14,6 +14,12 @@ describe CsiApi::GroupExClass do
   let(:base_client) { Savon.client(wsdl: "spec/fixtures/ApiService45.wsdl") } 
   let(:test_date_time) { DateTime.new(2013, 04, 15, 9, 00) }
   let(:group_ex_class) { CsiApi::GroupExClass.new class_info, test_date_time }
+  let(:member) do
+    consumer_response = File.read("spec/fixtures/factory/authenticate_consumer_response.xml")
+    savon.expects(:authenticate_consumer).with(message: {:consumer_name=>nil, :consumer_password=>nil}).returns(consumer_response)
+    member_info = mock_savon_response File.read("spec/fixtures/authenticate_member_response.xml")
+    CsiApi::Member.new member_info
+  end
   
   it "should initialize" do
     group_ex_class.should be_an_instance_of CsiApi::GroupExClass
@@ -52,6 +58,18 @@ describe CsiApi::GroupExClass do
   
   it "should return the date of the class as a date object for sorting" do
     group_ex_class.date.should == Date.parse("2013-04-15")
+  end
+  
+  it "should reserve the class for a member" do
+    message = { mem_id: member.member_id, schedule_id: group_ex_class.schedule_id }
+    savon.expects(:add_ol_s_cart_entry_for_group_x).with(message: message).returns(File.read("spec/fixtures/add_ol_s_cart_entry_for_group_x_response.xml"))
+    group_ex_class.reserve_class(member).should be_true
+  end
+  
+  it "should return an error string when reservation fails" do
+    message = { mem_id: member.member_id, schedule_id: group_ex_class.schedule_id }
+    savon.expects(:add_ol_s_cart_entry_for_group_x).with(message: message).returns(File.read("spec/fixtures/add_ol_s_cart_entry_for_group_x_fail_response.xml"))
+    group_ex_class.reserve_class(member).should == "Member cannot be enrolled in a past schedule.^^ApplicationModal"
   end
 
 end

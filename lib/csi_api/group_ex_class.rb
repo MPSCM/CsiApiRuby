@@ -40,10 +40,12 @@ module CsiApi
     
     def reserve_class(member)
       response = member.csi_client.call(:add_ol_s_cart_entry_for_group_x, message: {schedule_id: self.schedule_id, mem_id: member.member_id })
-      if response.body[:add_ol_s_cart_entry_for_group_x_response][:add_ol_s_cart_entry_for_group_x_result][:value] == 0
+      if response.body[:add_ol_s_cart_entry_for_group_x_response][:add_ol_s_cart_entry_for_group_x_result][:is_exception]
+        response.body[:add_ol_s_cart_entry_for_group_x_response][:add_ol_s_cart_entry_for_group_x_result][:exception][:message]
+      elsif response.body[:add_ol_s_cart_entry_for_group_x_response][:add_ol_s_cart_entry_for_group_x_result][:value].to_i == 0
         true
       else
-        response.body[:add_ol_s_cart_entry_for_group_x_response][:add_ol_s_cart_entry_for_group_x_result][:exception][:exception_string]
+        false
       end
     end
     
