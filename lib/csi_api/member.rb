@@ -12,6 +12,11 @@ module CsiApi
       populate_attributes member_info
     end
     
+    def get_gx_reservations
+      response = self.csi_client.call(:get_group_ex_schedules, message: { mem_id: self.member_id })
+      response.body[:get_group_ex_schedules_response][:get_group_ex_schedules_result][:value][:member_schedule_info]
+    end
+    
     private
     
     def get_member_ticket(member_info)
