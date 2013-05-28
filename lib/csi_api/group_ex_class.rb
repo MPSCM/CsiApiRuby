@@ -1,6 +1,7 @@
 module CsiApi
   
   class GroupExClass
+    include GroupExClassSharedMethods
     
     # attrs from GetClassSchedules
     ATTRS_FROM_LIST = [:class_name, :instructor, :bio_url, :location, :category_name, :fees, :mem_enrolled, :schedule_id, :mem_max]
@@ -18,26 +19,6 @@ module CsiApi
       set_date_time(group_ex_class_info, date)
     end
     
-    def long_date
-      self.start_date_time.strftime '%A, %b %-d, %Y'
-    end
-    
-    def short_date
-      self.start_date_time.strftime '%-m/%-d/%Y'
-    end
-    
-    def date
-      self.start_date_time.to_date
-    end
-    
-    def start_time
-      format_time(self.start_date_time)
-    end
-    
-    def end_time
-      format_time(self.end_date_time)
-    end
-    
     def reserve_class(member, equipment_id = nil)
       message = {schedule_id: self.schedule_id, mem_id: member.member_id }
       message[:equipment_id] = equipment_id if equipment_id
@@ -49,16 +30,7 @@ module CsiApi
       end
     end
     
-    def get_equipment_list(soap_client_container)
-      response = soap_client_container.soap_client.call(:get_equipment_list, message: { schedule_id: self.schedule_id })
-      CsiApi::EquipmentListGenerator.get_equipment_list response.body[:get_equipment_list_response][:get_equipment_list_result][:value][:equipment_list]
-    end
-    
     private
-    
-    def format_time(time)
-      time.strftime '%-l:%M %p'
-    end
     
     def set_attributes(api_info, list_of_attrs)
       list_of_attrs.each do |atrb|
