@@ -14,7 +14,8 @@ module CsiApi
     
     def get_gx_reservations
       response = self.soap_client.call(:get_group_ex_schedules, message: { mem_num: self.member_number })
-      response.body[:get_group_ex_schedules_response][:get_group_ex_schedules_result][:value][:member_schedule_info]
+      reservation_array = response.body[:get_group_ex_schedules_response][:get_group_ex_schedules_result][:value][:member_schedule_info]
+      ReservationList.new(self.member_id, reservation_array)
     end
     
     private

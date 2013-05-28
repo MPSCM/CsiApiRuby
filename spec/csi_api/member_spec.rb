@@ -52,11 +52,11 @@ describe CsiApi::Member do
   end
   
   it "should list reservations for group ex classes" do
-    message = { message: { mem_id: member.member_id } }
+    message = { message: { mem_num: member.member_number } }
     member.soap_client.should_receive(:call).with(:get_group_ex_schedules, message) { mock_savon_response File.read("spec/fixtures/get_group_ex_schedules_response.xml") }
     reservation_list = member.get_gx_reservations
-    reservation_list.should be_an_instance_of Array
-    reservation_list.length.should == 4
+    reservation_list.should be_an_instance_of CsiApi::ReservationList
+    reservation_list.class_list.length.should == 4
   end
     
   

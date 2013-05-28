@@ -77,6 +77,11 @@ describe CsiApi::GroupExClassList do
     list.class_list.should be_an_instance_of Array
     list.class_list.should_not be_empty
   end
+  
+  it "should append a class to @class_list using <<" do
+    list << "Pretend I'm an instance of GroupExClass"
+    list.class_list.last.should == "Pretend I'm an instance of GroupExClass"
+  end
 
   it "should handle a soap response that consists of zero classes for a particular day" do
     csi_client.should_receive(:get_class_list).with(142, "2013-04-20", "2013-04-20") { mock_savon_response File.read("spec/fixtures/get_class_schedules_response_zero.xml") }

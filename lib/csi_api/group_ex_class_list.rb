@@ -20,6 +20,10 @@ module CsiApi
       end  
     end
     
+    def <<(gx_class)
+      @class_list << gx_class
+    end
+    
     def method_missing(meth, *args, &block)
       if meth.to_s =~ /^sort_by_(.+)$/
         run_sort_by_method($1)
