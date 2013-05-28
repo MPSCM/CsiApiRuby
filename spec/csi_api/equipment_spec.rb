@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Equipment do
+describe CsiApi::Equipment do
   include CsiApiMocks
 
   let(:equipment_hash) do
@@ -8,27 +8,48 @@ describe Equipment do
     response.body[:get_equipment_list_response][:get_equipment_list_result][:value][:equipment_list][:equipment_info][0]
   end
   
-  let(:eqipment_obj) { Equipment.new equipment_hash }
+  let(:equipment_obj) { CsiApi::Equipment.new equipment_hash }
   
-  describe "it should initialize with a hash of options" do 
-    equipment = Equipment.new(equipment_hash).should_not be_nil
+  it "should initialize with a hash of options" do
+    equipment_hash
+    equipment = CsiApi::Equipment.new(equipment_hash).should_not be_nil
   end
   
-  describe "it should return the equipment name" do
-    equipment_obj.name.should == "Bike 2"
+  it "should return the equipment name" do
+    equipment_obj.name.should == "Bike  2"
   end
   
-  describe "it should return the x and y coordinates" do
+  it "should return the x and y coordinates" do
     equipment_obj.x.should == 147
     equipment_obj.y.should == 0
   end
   
-  describe "it should return true/false for an associated member" do
+  it "should return true/false for an associated member" do
     equipment_obj.member_associated?.should == false
   end
   
-  describe "it should return true/false for being booked" do
+  it "should return true/false for being booked" do
     equipment_obj.booked?.should == false
   end
 
+end
+
+describe CsiApi::EquipmentListGenerator do
+  include CsiApiMocks
+  
+  let(:array_of_equipment_hashes) do
+    response = mock_savon_response File.read("spec/fixtures/get_equipment_list_response.xml")
+    response.body[:get_equipment_list_response][:get_equipment_list_result][:value][:equipment_list][:equipment_info]
+  end
+  
+  let(:equipment_list) { CsiApi::EquipmentListGenerator.generate_list(array_of_equipment_hashes) }
+  
+  it "should generate an array when given an array of equipment hashes" do
+    equipment_list.should be_an_instance_of Array
+  end
+  
+  it "should be an array full of Equipment Objects" do
+    equipment_list[0].should be_an_instance_of CsiApi::Equipment
+  end  
+  
 end
