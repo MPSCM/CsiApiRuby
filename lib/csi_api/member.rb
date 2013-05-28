@@ -4,7 +4,7 @@ module CsiApi
     extend AddAttrAccessor
     include ExtractAttributes 
     
-    attr_accessor :member_ticket, :csi_client
+    attr_accessor :member_ticket, :soap_client
     
     def initialize(member_info)
       self.member_ticket = get_member_ticket(member_info)
@@ -13,7 +13,7 @@ module CsiApi
     end
     
     def get_gx_reservations
-      response = self.csi_client.call(:get_group_ex_schedules, message: { mem_id: self.member_id })
+      response = self.soap_client.call(:get_group_ex_schedules, message: { mem_num: self.member_number })
       response.body[:get_group_ex_schedules_response][:get_group_ex_schedules_result][:value][:member_schedule_info]
     end
     
@@ -24,7 +24,7 @@ module CsiApi
     end
     
     def create_csi_client(member_info)
-      self.csi_client = ClientFactory.generate_member_client(self.member_ticket)
+      self.soap_client = ClientFactory.generate_member_client(self.member_ticket)
     end
     
     def get_hash_from_info(member_info)

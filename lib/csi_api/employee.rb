@@ -4,7 +4,7 @@ module CsiApi
     extend AddAttrAccessor
     include ExtractAttributes
     
-    attr_accessor :employee_ticket, :employee_csi_client, :ols_settings
+    attr_accessor :employee_ticket, :soap_client, :ols_settings
     
     
     def initialize(employee_info)
@@ -21,7 +21,7 @@ module CsiApi
     end
     
     def create_employee_csi_client(employee_info)
-      self.employee_csi_client = ClientFactory.generate_employee_client(self.employee_ticket)
+      self.soap_client = ClientFactory.generate_employee_client(self.employee_ticket)
     end
     
     def create_ols_settings(employee_info)

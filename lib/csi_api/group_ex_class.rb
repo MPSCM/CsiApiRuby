@@ -38,15 +38,20 @@ module CsiApi
       format_time(self.end_date_time)
     end
     
-    def reserve_class(member)
-      response = member.csi_client.call(:add_ol_s_cart_entry_for_group_x, message: {schedule_id: self.schedule_id, mem_id: member.member_id })
+    def reserve_class(member, equipment_id = nil)
+      message = {schedule_id: self.schedule_id, mem_id: member.member_id }
+      message[:equipment_id] = equipment_id if equipment_id
+      response = member.soap_client.call(:add_ol_s_cart_entry_for_group_x, message: message)
       if response.body[:add_ol_s_cart_entry_for_group_x_response][:add_ol_s_cart_entry_for_group_x_result][:is_exception]
         response.body[:add_ol_s_cart_entry_for_group_x_response][:add_ol_s_cart_entry_for_group_x_result][:exception][:message]
-      elsif response.body[:add_ol_s_cart_entry_for_group_x_response][:add_ol_s_cart_entry_for_group_x_result][:value].to_i == 0
-        true
       else
-        false
+        true
       end
+    end
+    
+    def get_equipment_list(soap_client_container)
+      response = soap_client_container.soap_client.call(:get_equipment_list, message: { schedule_id: self.schedule_id })
+      response.body[:get_equipment_list_response][:get_equipment_list_result][:value][:equipment_list][:equipment_info]
     end
     
     private
