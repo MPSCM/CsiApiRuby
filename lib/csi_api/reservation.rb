@@ -34,6 +34,16 @@ module CsiApi
       get_additional_info unless @instructor
       @instructor
     end
+    
+    def cancel_reservation
+      get_csi_client unless @soap_client
+      response = self.soap_client.call(:cancel_grop_ex_enrollmentfor_no_fee, message: { schedule_id: self.schedule_id, mem_id: self.member_id })
+      if response.body[:cancel_grop_ex_enrollmentfor_no_fee_response][:cancel_grop_ex_enrollmentfor_no_fee_result][:is_exception] == true
+        response.body[:cancel_grop_ex_enrollmentfor_no_fee_response][:cancel_grop_ex_enrollmentfor_no_fee_result][:exception][:message]
+      else
+        true
+      end
+    end  
   
     private 
     

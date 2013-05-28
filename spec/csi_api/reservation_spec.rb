@@ -59,6 +59,20 @@ describe CsiApi::Reservation do
     reservation.instructor.should == "Lisa F."
   end
   
+  it "should cancel a reservation" do
+    CsiApi::ClientFactory.should_receive(:generate_soap_client) { Savon.client(wsdl: "spec/fixtures/ApiService45.wsdl") }
+    savon.expects(:cancel_grop_ex_enrollmentfor_no_fee).with(message: { schedule_id: reservation.schedule_id, mem_id: reservation.member_id }).returns(File.read("spec/fixtures/cancel_grop_ex_enrollmentfor_no_fee_response.xml"))
+    cancel = reservation.cancel_reservation    
+    cancel.should == true
+  end
+  
+  it "should return the error message if a cancellation fails" do
+    CsiApi::ClientFactory.should_receive(:generate_soap_client) { Savon.client(wsdl: "spec/fixtures/ApiService45.wsdl") }
+    savon.expects(:cancel_grop_ex_enrollmentfor_no_fee).with(message: { schedule_id: reservation.schedule_id, mem_id: reservation.member_id }).returns(File.read("spec/fixtures/cancel_grop_ex_enrollmentfor_no_fee_failure_response.xml"))
+    cancel = reservation.cancel_reservation    
+    cancel.should == "Class has a fee, please contact the facility regarding cancelling.^^ApplicationModal"
+  end
+  
 end
   
   
