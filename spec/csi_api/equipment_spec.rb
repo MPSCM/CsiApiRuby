@@ -39,7 +39,7 @@ describe CsiApi::EquipmentListGenerator do
   
   let(:array_of_equipment_hashes) do
     response = mock_savon_response File.read("spec/fixtures/get_equipment_list_response.xml")
-    response.body[:get_equipment_list_response][:get_equipment_list_result][:value][:equipment_list][:equipment_info]
+    response.body[:get_equipment_list_response][:get_equipment_list_result][:value][:equipment_list]
   end
   
   let(:equipment_list) { CsiApi::EquipmentListGenerator.generate_list(array_of_equipment_hashes) }
@@ -51,5 +51,11 @@ describe CsiApi::EquipmentListGenerator do
   it "should be an array full of Equipment Objects" do
     equipment_list[0].should be_an_instance_of CsiApi::Equipment
   end  
+  
+  it "should return an empty array if there is no associated equipment" do
+    empty_equipment_response = mock_savon_response File.read("spec/fixtures/get_equipment_list_empty_response.xml")
+    equipment_list = CsiApi::EquipmentListGenerator.generate_list empty_equipment_response.body[:get_equipment_list_response][:get_equipment_list_result][:value][:equipment_list]
+    equipment_list.should == []
+  end
   
 end

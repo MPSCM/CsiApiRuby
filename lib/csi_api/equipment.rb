@@ -36,15 +36,25 @@ module CsiApi
   
   class EquipmentListGenerator
     
-    def self.generate_list(array_of_hashes)
+    def self.generate_list(csi_equipment_list)
+      if csi_equipment_list.nil?
+        return []
+      else
+        self.populate_equipment_list csi_equipment_list
+      end
+    end
+    
+    private
+    
+    def self.populate_equipment_list(csi_equipment_list)
       equipment_list = []
-      array_of_hashes.each do |equipment_hash|
+      csi_equipment_list[:equipment_info].each do |equipment_hash|
         equipment_obj = Equipment.new(equipment_hash) 
         equipment_list << equipment_obj
       end
       return equipment_list
     end
-
+    
   end
   
 end

@@ -51,7 +51,7 @@ module CsiApi
     
     def get_equipment_list(soap_client_container)
       response = soap_client_container.soap_client.call(:get_equipment_list, message: { schedule_id: self.schedule_id })
-      response.body[:get_equipment_list_response][:get_equipment_list_result][:value][:equipment_list][:equipment_info]
+      CsiApi::EquipmentListGenerator.get_equipment_list response.body[:get_equipment_list_response][:get_equipment_list_result][:value][:equipment_list]
     end
     
     private
