@@ -34,23 +34,3 @@ module CsiApi
   end
 
 end
-
-
-# def getGroupExCategoriesList(site_id)
-#   categories = @soap_client.call(:get_categories, message: { module_for: "GRX", site_id: site_id, include_all_option: true, check_s_s_count: true })
-#   return false if categories.body[:get_categories_response][:get_categories_result][:is_exception]
-#   category_list = categories.body[:get_categories_response][:get_categories_result][:value]
-# end
-# 
-# def getGroupExServicesList(site_id, cat_guid=nil)
-#   cat_guid ||= "00000000-0000-0000-0000-000000000000" # All Categories
-#   gp_x = @soap_client.call(:get_group_x_services, message: { site_id: site_id, category_guid: cat_guid, mod_for: "GRX", show_inactive: false, include_all: true })
-#   return false if gp_x.body[:get_group_x_services_response][:get_group_x_services_result][:is_exception]
-#   gp_x_list = gp_x.body[:get_grou_x_services_response][:get_group_ex_services_result][:value]
-# end
-# 
-# def getClassesList(site_id)
-#   classes = @soap_client.call(:get_classes, message: { site_id: site_id })
-#   return false if classes.body[:get_classes_response][:get_classes_result][:is_exception]
-#   classes_list = classes.body[:get_classes_response][:get_classes_result][:value]
-# end
