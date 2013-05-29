@@ -57,6 +57,7 @@ describe CsiApi::Member do
     reservation_list = member.get_gx_reservations
     reservation_list.should be_an_instance_of CsiApi::ReservationList
     reservation_list.class_list.length.should == 4
+    reservation_list.class_list.first.should be_an_instance_of CsiApi::Reservation
   end
     
   

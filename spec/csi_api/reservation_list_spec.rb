@@ -29,5 +29,10 @@ describe CsiApi::ReservationList do
    reservation_list = CsiApi::ReservationList.new("534763", schedules_array)
    reservation_list.class_list[0].should be_an_instance_of CsiApi::Reservation
  end   
+ 
+ it "should return an empty Reservation list if the array of reservations is []" do
+   reservation_list = CsiApi::ReservationList.new("534763", [])
+   reservation_list.class_list.should == []
+ end
   
 end
