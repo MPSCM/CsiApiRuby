@@ -66,6 +66,14 @@ describe CsiApi::GroupExClass do
     group_ex_class.reserve_class(member).should be_true
   end
   
+  it "should reserve the class with a specific piece of equipment for the member" do
+    Equipment = Struct.new(:equipment_id)
+    equipment = Equipment.new(5)
+    message = { mem_id: member.member_id, schedule_id: group_ex_class.schedule_id, equipment_id: equipment.equipment_id }
+    savon.expects(:add_ol_s_cart_entry_for_group_x).with(message: message).returns(File.read("spec/fixtures/add_ol_s_cart_entry_for_group_x_response.xml"))
+    group_ex_class.reserve_class(member, equipment).should be_true
+  end
+  
   it "should return an error string when reservation fails" do
     message = { mem_id: member.member_id, schedule_id: group_ex_class.schedule_id }
     savon.expects(:add_ol_s_cart_entry_for_group_x).with(message: message).returns(File.read("spec/fixtures/add_ol_s_cart_entry_for_group_x_fail_response.xml"))

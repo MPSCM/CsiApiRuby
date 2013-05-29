@@ -19,9 +19,9 @@ module CsiApi
       set_date_time(group_ex_class_info, date)
     end
     
-    def reserve_class(member, equipment_id = nil)
+    def reserve_class(member, equipment = nil)
       message = {schedule_id: self.schedule_id, mem_id: member.member_id }
-      message[:equipment_id] = equipment_id if equipment_id
+      message[:equipment_id] = equipment.equipment_id if equipment
       response = member.soap_client.call(:add_ol_s_cart_entry_for_group_x, message: message)
       if response.body[:add_ol_s_cart_entry_for_group_x_response][:add_ol_s_cart_entry_for_group_x_result][:is_exception]
         response.body[:add_ol_s_cart_entry_for_group_x_response][:add_ol_s_cart_entry_for_group_x_result][:exception][:message]
