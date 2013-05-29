@@ -74,4 +74,11 @@ describe CsiApi::Member do
     member.clear_cart.should be_true
   end
   
+  it "should return a list of cart items" do
+    member.soap_client.should_receive(:call).with(:get_cart_by_mem_num, message: { mem_num: member.member_number }) { mock_savon_response File.read("spec/fixtures/get_cart_by_mem_num_response.xml") }
+    cart = member.get_cart
+    cart.should be_an_instance_of Array
+    cart[0].should be_an_instance_of CsiApi::CartItem
+  end
+  
 end

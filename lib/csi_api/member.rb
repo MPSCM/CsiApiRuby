@@ -26,14 +26,22 @@ module CsiApi
         true
       end
     end
-    
-    
+        
     def clear_cart
       response = self.soap_client.call(:member_clear_cart)
       if response.body[:member_clear_cart_response][:member_clear_cart_result][:is_exception] == true
         response.body[:member_clear_cart_response][:member_clear_cart_result][:exception][:message]
       else
         true
+      end
+    end
+    
+    def get_cart
+      response = self.soap_client.call(:get_cart_by_mem_num, message: { mem_num: self.member_number })
+      if response.body[:get_cart_by_mem_num_response][:get_cart_by_mem_num_result][:is_exception] == true
+        response.body[:get_cart_by_mem_num_response][:get_cart_by_mem_num_result][:exception][:message]
+      else
+        create_cart response.body[:get_cart_by_mem_num_response][:get_cart_by_mem_num_result][:value]
       end
     end
     
@@ -49,6 +57,10 @@ module CsiApi
     
     def get_hash_from_info(member_info)
       member_info.body[:authenticate_member_response][:authenticate_member_result][:value][:membership_info]
+    end
+    
+    def create_cart(item_list)
+      CartGenerator.generate_list(item_list)
     end
     
   end
