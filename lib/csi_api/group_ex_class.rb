@@ -29,6 +29,14 @@ module CsiApi
       end
     end
     
+    def member_fee
+      extract_fee :member
+    end
+    
+    def guest_fee
+      extract_fee :guest
+    end
+    
     private
     
     def set_attributes(api_info, list_of_attrs)
@@ -45,6 +53,12 @@ module CsiApi
       self.end_date_time = DateTime.new(date.year, date.month, date.day, class_end_time.hour, class_end_time.min)
     end
         
+    def extract_fee(type)
+      regex = { member: /\AMember Fee: (\$\d+\.\d+)/, guest: /Non-Member Fee: (\$\d+\.\d+)/ }
+      @fees =~ regex[type]
+      $1
+    end
+    
   end
 
 end

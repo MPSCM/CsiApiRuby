@@ -20,6 +20,10 @@ describe CsiApi::GroupExClass do
     member_info = mock_savon_response File.read("spec/fixtures/authenticate_member_response.xml")
     CsiApi::Member.new member_info
   end
+  let(:class_with_fees) do
+    class_info[:fees] = "Member Fee: $501.00 Non-Member Fee: $551.00"
+    CsiApi::GroupExClass.new(class_info, test_date_time)
+  end
   
   it "should initialize" do
     group_ex_class.should be_an_instance_of CsiApi::GroupExClass
@@ -58,6 +62,14 @@ describe CsiApi::GroupExClass do
   
   it "should return the date of the class as a date object for sorting" do
     group_ex_class.date.should == Date.parse("2013-04-15")
+  end
+  
+  it "should parse the fees for members" do
+    class_with_fees.member_fee.should == "$501.00"
+  end
+  
+  it "should parse the fees for guests" do
+    class_with_fees.guest_fee.should == "$551.00"
   end
   
   it "should reserve the class for a member" do
