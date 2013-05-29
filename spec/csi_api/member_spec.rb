@@ -15,7 +15,8 @@ describe CsiApi::Member do
   end
   
   let(:member) do
-    CsiApi::ClientFactory.should_receive(:generate_member_client).with(member_auth_token).at_least(:once)  
+    soap_client = double("Savon::Client")
+    CsiApi::ClientFactory.should_receive(:generate_member_client).with(member_auth_token).at_least(:once)  { soap_client }
     CsiApi::Member.new member_info
   end
   
@@ -59,6 +60,18 @@ describe CsiApi::Member do
     reservation_list.class_list.length.should == 4
     reservation_list.class_list.first.should be_an_instance_of CsiApi::Reservation
   end
-    
+  
+  it "should remove an item from the member's cart" do
+    message = { mem_num: member.member_number, reservation_id: "831" }
+    member.soap_client.should_receive(:call).with(:remove_cart_item_by_mem_num, message: message) { mock_savon_response File.read("spec/fixtures/remove_cart_item_by_mem_num_response.xml") }
+    Item = Struct.new(:reservation_id)
+    item = Item.new("831")
+    member.remove_item_from_cart(item).should be_true
+  end
+  
+  it "should clear the member's cart" do
+    member.soap_client.should_receive(:call).with(:member_clear_cart) { mock_savon_response File.read("spec/fixtures/member_clear_cart_response.xml") }
+    member.clear_cart.should be_true
+  end
   
 end

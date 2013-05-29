@@ -18,6 +18,25 @@ module CsiApi
       ReservationList.new(self.member_id, reservation_array)
     end
     
+    def remove_item_from_cart(item)
+      response = self.soap_client.call(:remove_cart_item_by_mem_num, message: { mem_num: self.member_number, reservation_id: item.reservation_id }) 
+      if response.body[:remove_cart_item_by_mem_num_response][:remove_cart_item_by_mem_num_result][:is_exception] == true
+        response.body[:remove_cart_item_by_mem_num_response][:remove_cart_item_by_mem_num_result][:exception][:message]
+      else
+        true
+      end
+    end
+    
+    
+    def clear_cart
+      response = self.soap_client.call(:member_clear_cart)
+      if response.body[:member_clear_cart_response][:member_clear_cart_result][:is_exception] == true
+        response.body[:member_clear_cart_response][:member_clear_cart_result][:exception][:message]
+      else
+        true
+      end
+    end
+    
     private
     
     def get_member_ticket(member_info)
