@@ -17,31 +17,17 @@ module CsiApi
     
   end
   
-  class CartGenerator
-    
-    def self.generate_list(cart_item_list)
-      if cart_item_list.nil?
-        return []
-      else
-        self.populate_item_list cart_item_list
-      end
-    end
+  class CartGenerator < ListGenerator
     
     private
     
-    def self.populate_item_list(cart_item_list)
-      item_list = []
-      cart_item_array = get_cart_item_array(cart_item_list)
-      cart_item_array.each do |item_hash|
-        cart_item = CartItem.new(item_hash)
-        item_list << cart_item
-      end
-      return item_list
+    def self.get_equipment_array(api_item_list)
+      api_item_info = api_item_list[:ols_cart_item]
+      api_item_info.class == Array ? api_item_info : [api_item_info]
     end
-   
-    def self.get_cart_item_array(cart_item_list)
-      cart_item_info = cart_item_list[:ols_cart_item]
-      cart_item_info.class == Array ? cart_item_info : [cart_item_info]
+    
+    def self.create_object(object_hash)
+      CartItem.new object_hash
     end
     
   end
