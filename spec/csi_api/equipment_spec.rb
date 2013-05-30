@@ -58,4 +58,10 @@ describe CsiApi::EquipmentListGenerator do
     equipment_list.should == []
   end
   
+  it "should not fail if the input has a single class hash and is not an array" do
+    single_item_response = mock_savon_response File.read("spec/fixtures/get_equipment_list_single_item_response.xml")
+    equipment_list = CsiApi::EquipmentListGenerator.generate_list single_item_response.body[:get_equipment_list_response][:get_equipment_list_result][:value][:equipment_list]
+    equipment_list.length.should == 1
+  end
+  
 end
