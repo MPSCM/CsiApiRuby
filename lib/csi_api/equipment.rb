@@ -48,7 +48,7 @@ module CsiApi
     
     def self.populate_equipment_list(csi_equipment_list)
       equipment_list = []
-      csi_equipment_array = csi_equipment_list[:equipment_info].class == Array ? csi_equipment_list[:equipment_info] : [csi_equipment_list[:equipment_info]]
+      csi_equipment_array = self.get_equipment_array(csi_equipment_list)
       csi_equipment_array.each do |equipment_hash|
         equipment_obj = Equipment.new(equipment_hash) 
         equipment_list << equipment_obj
@@ -56,6 +56,10 @@ module CsiApi
       return equipment_list
     end
     
+    def self.get_equipment_array(csi_equipment_list)
+      equipment_info = csi_equipment_list[:equipment_info]
+      equipment_info.class == Array ? equipment_info : [equipment_info]
+    end
   end
   
 end
