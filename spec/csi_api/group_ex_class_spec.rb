@@ -78,6 +78,15 @@ describe CsiApi::GroupExClass do
     group_ex_class.reserve_class(member).should be_true
   end
   
+  it "should return a list of equipment associated with a class" do
+    savon.expects(:get_equipment_list).with(message: { schedule_id: group_ex_class.schedule_id }).returns(File.read("spec/fixtures/get_equipment_list_response.xml"))
+    SoapContainer = Struct.new(:soap_client)
+    soap_container = SoapContainer.new(base_client)
+    equipment_list = group_ex_class.get_equipment_list(soap_container)
+    equipment_list.should be_an_instance_of Array
+    equipment_list[0].should be_an_instance_of CsiApi::Equipment
+  end
+  
   it "should reserve the class with a specific piece of equipment for the member" do
     Equipment = Struct.new(:equipment_id)
     equipment = Equipment.new(5)
