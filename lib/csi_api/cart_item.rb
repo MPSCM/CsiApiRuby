@@ -23,7 +23,6 @@ module CsiApi
       if cart_item_list.nil?
         return []
       else
-        cart_item_list.respond_to?(:each) ? cart_item_list : [cart_item_list]
         self.populate_item_list cart_item_list
       end
     end
@@ -32,11 +31,17 @@ module CsiApi
     
     def self.populate_item_list(cart_item_list)
       item_list = []
-      cart_item_list[:ols_cart_item].each do |item_hash|
+      cart_item_array = get_cart_item_array(cart_item_list)
+      cart_item_array.each do |item_hash|
         cart_item = CartItem.new(item_hash)
         item_list << cart_item
       end
       return item_list
+    end
+   
+    def self.get_cart_item_array(cart_item_list)
+      cart_item_info = cart_item_list[:ols_cart_item]
+      cart_item_info.class == Array ? cart_item_info : [cart_item_info]
     end
     
   end

@@ -49,4 +49,10 @@ describe CsiApi::CartGenerator do
     item_list.should == []
   end
   
+  it "should not fail if there is only one item in the cart" do
+    single_item_response = mock_savon_response File.read("spec/fixtures/get_cart_by_mem_num_single_item_response.xml")
+    item_list = CsiApi::CartGenerator.generate_list single_item_response.body[:get_cart_by_mem_num_response][:get_cart_by_mem_num_result][:value]
+    item_list.length.should == 1
+  end
+  
 end
