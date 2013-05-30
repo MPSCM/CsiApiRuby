@@ -4,6 +4,7 @@ require 'savon'
 require_relative 'csi_api/add_attr_accessor'
 require_relative 'csi_api/extract_attributes'
 require_relative 'csi_api/group_ex_class_shared_methods'
+require_relative 'csi_api/check_soap_response'
 
 # classes
 require_relative 'csi_api/client_factory'

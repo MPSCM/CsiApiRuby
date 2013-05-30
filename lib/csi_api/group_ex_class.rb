@@ -2,6 +2,7 @@ module CsiApi
   
   class GroupExClass
     include GroupExClassSharedMethods
+    include CheckSoapResponse
     
     # attrs from GetClassSchedules
     ATTRS_FROM_LIST = [:class_name, :instructor, :bio_url, :location, :category_name, :fees, :mem_enrolled, :schedule_id, :mem_max]
@@ -22,8 +23,8 @@ module CsiApi
       message = {schedule_id: self.schedule_id, mem_id: member.member_id }
       message[:equipment_id] = equipment.equipment_id if equipment
       response = member.soap_client.call(:add_ol_s_cart_entry_for_group_x, message: message)
-      if response.body[:add_ol_s_cart_entry_for_group_x_response][:add_ol_s_cart_entry_for_group_x_result][:is_exception]
-        response.body[:add_ol_s_cart_entry_for_group_x_response][:add_ol_s_cart_entry_for_group_x_result][:exception][:message]
+      if exception = check_soap_response(response, :add_ol_s_cart_entry_for_group_x)
+        exception
       else
         true
       end

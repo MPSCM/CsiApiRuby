@@ -3,6 +3,7 @@ module CsiApi
   class Member
     extend AddAttrAccessor
     include ExtractAttributes 
+    include CheckSoapResponse
     
     attr_accessor :member_ticket, :soap_client
     
@@ -20,8 +21,8 @@ module CsiApi
     
     def remove_item_from_cart(item)
       response = self.soap_client.call(:remove_cart_item_by_mem_num, message: { mem_num: self.member_number, reservation_id: item.reservation_id }) 
-      if response.body[:remove_cart_item_by_mem_num_response][:remove_cart_item_by_mem_num_result][:is_exception] == true
-        response.body[:remove_cart_item_by_mem_num_response][:remove_cart_item_by_mem_num_result][:exception][:message]
+      if exception = check_soap_response(response, :remove_cart_item_by_mem_num)
+        exception
       else
         true
       end
@@ -29,8 +30,8 @@ module CsiApi
         
     def clear_cart
       response = self.soap_client.call(:member_clear_cart)
-      if response.body[:member_clear_cart_response][:member_clear_cart_result][:is_exception] == true
-        response.body[:member_clear_cart_response][:member_clear_cart_result][:exception][:message]
+      if exception = check_soap_response(response, :member_clear_cart)
+        exception
       else
         true
       end
@@ -38,8 +39,8 @@ module CsiApi
     
     def get_cart
       response = self.soap_client.call(:get_cart_by_mem_num, message: { mem_num: self.member_number })
-      if response.body[:get_cart_by_mem_num_response][:get_cart_by_mem_num_result][:is_exception] == true
-        response.body[:get_cart_by_mem_num_response][:get_cart_by_mem_num_result][:exception][:message]
+      if exception = check_soap_response(response, :get_cart_by_mem_num)
+        exception
       else
         create_cart response.body[:get_cart_by_mem_num_response][:get_cart_by_mem_num_result][:value]
       end

@@ -2,6 +2,7 @@ module CsiApi
   
   class Reservation
     include GroupExClassSharedMethods
+    include CheckSoapResponse
     
     attr_accessor :soap_client, :schedule_id, :class_name, :site_id, :equipment_name, :start_date_time, 
                   :end_date_time, :equipment_id, :short_desc, :bio_url, :instructor, :member_id
@@ -38,8 +39,8 @@ module CsiApi
     def cancel_reservation
       get_csi_client unless @soap_client
       response = self.soap_client.call(:cancel_grop_ex_enrollmentfor_no_fee, message: { schedule_id: self.schedule_id, mem_id: self.member_id })
-      if response.body[:cancel_grop_ex_enrollmentfor_no_fee_response][:cancel_grop_ex_enrollmentfor_no_fee_result][:is_exception] == true
-        response.body[:cancel_grop_ex_enrollmentfor_no_fee_response][:cancel_grop_ex_enrollmentfor_no_fee_result][:exception][:message]
+      if exception = check_soap_response(response, :cancel_grop_ex_enrollmentfor_no_fee)
+        exception
       else
         true
       end
