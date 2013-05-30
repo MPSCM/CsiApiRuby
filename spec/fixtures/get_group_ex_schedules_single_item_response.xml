@@ -1,0 +1,35 @@
+<soap:Envelope>
+  <soap:Body>
+    <GetGroupExSchedulesResponse>
+      <GetGroupExSchedulesResult>
+        <Value>
+          <MemberScheduleInfo>
+            <ScheduleId>1286855</ScheduleId>
+            <ScheduleGuid>0d2641fe-32da-44ee-b5b9-02ccf850f872</ScheduleGuid>
+            <ScheduleName>Book Me</ScheduleName>
+            <SiteId>142</SiteId>
+            <SiteName>The Sports Club/LA-Washington, D.C.</SiteName>
+            <Sessions>
+              <ScheduleSessionInfo>
+                <SessionId>1413750</SessionId>
+                <SessionGuid>c386bdb3-1e6d-4d5c-b646-574d9821622b</SessionGuid>
+                <ServiceId>1565</ServiceId>
+                <ServiceName>Book Me</ServiceName>
+                <StartTime>2013-05-23T12:00:00</StartTime>
+                <EndTime>2013-05-23T13:00:00</EndTime>
+                <Providers/>
+                <Resources/>
+                <Participant>A N</Participant>
+                <SessionStatus>1</SessionStatus>
+              </ScheduleSessionInfo>
+            </Sessions>
+            <MemNum>BOS52678</MemNum>
+            <ParticipantName>Stuart Terrett</ParticipantName>
+            <EquipmentName/>
+          </MemberScheduleInfo>
+        </Value>
+        <IsException>false</IsException>
+      </GetGroupExSchedulesResult>
+    </GetGroupExSchedulesResponse>
+  </soap:Body>
+</soap:Envelope>

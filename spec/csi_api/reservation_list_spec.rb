@@ -34,5 +34,12 @@ describe CsiApi::ReservationList do
    reservation_list = CsiApi::ReservationList.new("534763", [])
    reservation_list.class_list.should == []
  end
+ 
+ it "should not fail if the array of reservations has only one reservation" do
+   schedules_response = mock_savon_response File.read("spec/fixtures/get_group_ex_schedules_single_item_response.xml")
+   schedules_array =    schedules_response.body[:get_group_ex_schedules_response][:get_group_ex_schedules_result][:value][:member_schedule_info]
+   reservation_list = CsiApi::ReservationList.new("534763", schedules_array)
+   reservation_list.class_list.length.should == 1
+ end
   
 end
