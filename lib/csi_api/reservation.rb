@@ -60,7 +60,7 @@ module CsiApi
     
     def get_additional_info
       get_csi_client unless self.soap_client
-      response = self.soap_client.call(:get_schedule_by_mem_id, message: { mem_id: self.member_id })
+      response = self.soap_client.call(:get_schedule_by_mem_id, message: { mem_id: self.member_id, schedule_id: self.schedule_id })
       add_remaining_attrs response.body[:get_schedule_by_mem_id_response][:get_schedule_by_mem_id_result][:value]
     end
     

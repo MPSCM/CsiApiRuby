@@ -39,20 +39,20 @@ describe CsiApi::Reservation do
   
   it "should call :get_schedule_by_mem_id for extra information" do
     CsiApi::ClientFactory.should_receive(:generate_soap_client) { Savon.client(wsdl: "spec/fixtures/ApiService45.wsdl") }
-    savon.expects(:get_schedule_by_mem_id).with(message: { mem_id: reservation.member_id }).returns(File.read("spec/fixtures/get_schedule_by_mem_id_response.xml"))
+    savon.expects(:get_schedule_by_mem_id).with(message: { mem_id: reservation.member_id, schedule_id: reservation.schedule_id }).returns(File.read("spec/fixtures/get_schedule_by_mem_id_response.xml"))
     reservation.equipment_id
   end
   
   it "should store extra information and not call the API a second time" do
     CsiApi::ClientFactory.should_receive(:generate_soap_client) { Savon.client(wsdl: "spec/fixtures/ApiService45.wsdl") }
-    savon.expects(:get_schedule_by_mem_id).with(message: { mem_id: reservation.member_id }).returns(File.read("spec/fixtures/get_schedule_by_mem_id_response.xml"))
+    savon.expects(:get_schedule_by_mem_id).with(message: { mem_id: reservation.member_id, schedule_id: reservation.schedule_id }).returns(File.read("spec/fixtures/get_schedule_by_mem_id_response.xml"))
     reservation.equipment_id
     reservation.equipment_id
   end
   
   it "should fill in remaining attributes correctly" do
     CsiApi::ClientFactory.should_receive(:generate_soap_client) { Savon.client(wsdl: "spec/fixtures/ApiService45.wsdl") }
-    savon.expects(:get_schedule_by_mem_id).with(message: { mem_id: reservation.member_id }).returns(File.read("spec/fixtures/get_schedule_by_mem_id_response.xml"))
+    savon.expects(:get_schedule_by_mem_id).with(message: { mem_id: reservation.member_id, schedule_id: reservation.schedule_id }).returns(File.read("spec/fixtures/get_schedule_by_mem_id_response.xml"))
     reservation.equipment_id.should == "0"
     reservation.short_desc.should == "REV"
     reservation.bio_url.should == ""
