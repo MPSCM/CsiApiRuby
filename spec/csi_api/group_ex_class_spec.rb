@@ -16,7 +16,7 @@ describe CsiApi::GroupExClass do
   let(:group_ex_class) { CsiApi::GroupExClass.new class_info, test_date_time }
   let(:member) do
     consumer_response = File.read("spec/fixtures/factory/authenticate_consumer_response.xml")
-    savon.expects(:authenticate_consumer).with(message: {:consumer_name=>nil, :consumer_password=>nil}).returns(consumer_response)
+    savon.expects(:authenticate_consumer).with(message: anything()).returns(consumer_response)
     member_info = mock_savon_response File.read("spec/fixtures/authenticate_member_response.xml")
     CsiApi::Member.new member_info
   end

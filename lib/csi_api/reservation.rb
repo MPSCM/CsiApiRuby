@@ -4,7 +4,7 @@ module CsiApi
     include GroupExClassSharedMethods
     include CheckSoapResponse
     
-    attr_accessor :soap_client, :schedule_id, :class_name, :site_id, :equipment_name, :start_date_time, 
+    attr_accessor :schedule_id, :class_name, :site_id, :equipment_name, :start_date_time, 
                   :end_date_time, :equipment_id, :short_desc, :bio_url, :instructor, :member_id
                   
     def initialize(gx_reservation_hash, member_id)
@@ -37,7 +37,6 @@ module CsiApi
     end
     
     def cancel_reservation
-      get_csi_client unless @soap_client
       response = self.soap_client.call(:cancel_grop_ex_enrollmentfor_no_fee, message: { schedule_id: self.schedule_id, mem_id: self.member_id })
       if exception = check_soap_response(response, :cancel_grop_ex_enrollmentfor_no_fee)
         exception
@@ -54,12 +53,7 @@ module CsiApi
       self.end_date_time = inner_hash[:end_time]
     end
     
-    def get_csi_client
-      @soap_client = ClientFactory.generate_soap_client
-    end
-    
     def get_additional_info
-      get_csi_client unless self.soap_client
       response = self.soap_client.call(:get_schedule_by_mem_id, message: { mem_id: self.member_id, schedule_id: self.schedule_id })
       add_remaining_attrs response.body[:get_schedule_by_mem_id_response][:get_schedule_by_mem_id_result][:value]
     end

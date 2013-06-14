@@ -10,7 +10,7 @@ module CsiApi
       attr_accessor atrb
     end
     
-    attr_accessor :start_date_time, :end_date_time, :soap_client, :long_waiver, :short_waiver
+    attr_accessor :start_date_time, :end_date_time
     
     # group_ex_class_info is element from array of group ex classes returned
     # to the GroupExClassList object. It's just a hash
@@ -38,33 +38,7 @@ module CsiApi
       extract_fee :guest
     end
     
-    def long_waiver
-      get_waivers unless @long_waiver
-      @long_waiver
-    end
-    
-    def short_waiver
-      get_waivers unless @short_waiver
-      @short_waiver
-    end
-    
-    def soap_client
-      get_soap_client unless @soap_client
-      @soap_client
-    end
-    
     private
-    
-    def get_soap_client
-      @soap_client = CsiApi::ClientFactory.generate_soap_client
-    end
-    
-    def get_waivers
-      response = self.soap_client.call(:get_waiver_by_schedule_id, message: { schedule_id: self.schedule_id })
-      value = response.body[:get_waiver_by_schedule_id_response][:get_waiver_by_schedule_id_result][:value]
-      @short_waiver = value[:short_waiver].to_s
-      @long_waiver = value[:long_waiver].to_s
-    end
     
     def set_attributes(api_info, list_of_attrs)
       list_of_attrs.each do |atrb|
