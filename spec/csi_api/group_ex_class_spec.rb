@@ -100,5 +100,39 @@ describe CsiApi::GroupExClass do
     savon.expects(:add_ol_s_cart_entry_for_group_x).with(message: message).returns(File.read("spec/fixtures/add_ol_s_cart_entry_for_group_x_fail_response.xml"))
     group_ex_class.reserve_class(member).should == "Member cannot be enrolled in a past schedule.^^ApplicationModal"
   end
-
+  
+  describe "waivers" do
+   
+    before(:each) do
+      CsiApi::ClientFactory.should_receive(:generate_soap_client).once { base_client }
+    end
+    
+    it "should get a soap client" do
+      group_ex_class.soap_client.should be_an_instance_of Savon::Client
+    end
+  
+    it "should store the client and not call CsiApi::ClientFactory again" do
+      group_ex_class.soap_client
+      group_ex_class.soap_client
+    end
+  
+    it "should return the long waiver" do
+      savon.expects(:get_waiver_by_schedule_id).with(message: { schedule_id: group_ex_class.schedule_id }).returns(File.read("spec/fixtures/get_waiver_by_schedule_id_response.xml"))
+      waiver = group_ex_class.long_waiver
+      waiver.should be_an_instance_of String
+    end
+  
+    it "should return the long waiver" do
+      savon.expects(:get_waiver_by_schedule_id).with(message: { schedule_id: group_ex_class.schedule_id }).returns(File.read("spec/fixtures/get_waiver_by_schedule_id_response.xml"))
+      group_ex_class.short_waiver.should be_an_instance_of String
+    end
+  
+    it "should store both waivers on the first call and not call soap_client a second time" do
+      savon.expects(:get_waiver_by_schedule_id).with(message: { schedule_id: group_ex_class.schedule_id }).returns(File.read("spec/fixtures/get_waiver_by_schedule_id_response.xml"))
+      group_ex_class.long_waiver
+      group_ex_class.short_waiver
+     end
+   
+   end
+   
 end
